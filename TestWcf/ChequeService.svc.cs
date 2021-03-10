@@ -9,6 +9,11 @@ namespace TestWcf
     public class CheckService : IChequeService
     {
         /// <summary>
+        /// Объект логгера
+        /// </summary>
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        /// <summary>
         /// Ссылка на репозиторий
         /// </summary>
         IDBRepository repository;
@@ -30,7 +35,7 @@ namespace TestWcf
         {
             if (pack_size <= 0)
             {
-                // TODO: логгировать
+                log.Error($"Запрошенное количество чеков \"{pack_size}\" недопустимо");
                 return new List<Cheque>();
             }
 
@@ -51,7 +56,7 @@ namespace TestWcf
             }
             else
             {
-                // TODO: логгировать
+                log.Error($"Объект чека не определён \"cheque = null\"");
             }
         }
     }

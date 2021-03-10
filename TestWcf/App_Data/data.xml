@@ -32,12 +32,75 @@
     <Discount>333</Discount>
   </Cheque>
   <Cheque>
-    <Id>7028a1f9-f336-4e34-8dae-279ab47be473</Id>
+    <Id>427d0cc9-18fe-4a42-b5e6-cacddd3c6197</Id>
     <Number>456322</Number>
     <Summ>9998</Summ>
     <Discount>6</Discount>
     <Articles>
-      <string>1;2;hh;ttt</string>
+      <string>1</string>
+      <string>2</string>
+      <string>hh</string>
+      <string>ttt</string>
+    </Articles>
+  </Cheque>
+  <Cheque>
+    <Id>e37c7d4b-e1a0-45b5-9d15-639f8e80ad0b</Id>
+    <Number>456322</Number>
+    <Summ>9998</Summ>
+    <Discount>6</Discount>
+    <Articles>
+      <string>1</string>
+      <string>2</string>
+      <string>hh</string>
+      <string>ttt</string>
+    </Articles>
+  </Cheque>
+  <Cheque>
+    <Id>c613ef62-6e87-429a-af94-ebab6fdae4d1</Id>
+    <Number>456322</Number>
+    <Summ>9998</Summ>
+    <Discount>6</Discount>
+    <Articles>
+      <string>1</string>
+      <string>2</string>
+      <string>hh</string>
+      <string>ttt</string>
+    </Articles>
+  </Cheque>
+  <Cheque>
+    <Id>614f116f-0879-4f8c-87be-ff679a48134e</Id>
+    <Number>456322</Number>
+    <Summ>9998</Summ>
+    <Discount>6</Discount>
+    <Articles>
+      <string>1</string>
+      <string>2</string>
+      <string>hh</string>
+      <string>ttt</string>
+    </Articles>
+  </Cheque>
+  <Cheque>
+    <Id>63f277e4-34cf-48e0-8bc5-b2f452e4ca4e</Id>
+    <Number>456322</Number>
+    <Summ>9998.9</Summ>
+    <Discount>6.5</Discount>
+    <Articles>
+      <string>article1</string>
+      <string>article2</string>
+      <string>article3</string>
+      <string>article4</string>
+    </Articles>
+  </Cheque>
+  <Cheque>
+    <Id>63f277e4-34cf-42e0-8bc5-b2f452e4ca4e</Id>
+    <Number>456326</Number>
+    <Summ>268.9</Summ>
+    <Discount>1.5</Discount>
+    <Articles>
+      <string>article1</string>
+      <string>article2</string>
+      <string>article3</string>
+      <string>article4</string>
     </Articles>
   </Cheque>
 </ArrayOfCheque>

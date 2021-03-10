@@ -14,6 +14,11 @@ namespace TestWcf
     public class DBRepository : IDBRepository
     {
         /// <summary>
+        /// Объект логгера
+        /// </summary>
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        /// <summary>
         /// Строка подключения к БД
         /// </summary>
         string connectionString = null;
@@ -54,8 +59,8 @@ namespace TestWcf
             }
             catch (Exception ex)
             {
-                // TODO: логгировать
-                throw new Exception("Не удалось получить список чеков", ex);
+                log.Error("Не удалось получить список чеков" + Environment.NewLine + ex.Message);
+                return new List<Cheque>();
             }
         }
 
@@ -86,8 +91,7 @@ namespace TestWcf
             }
             catch (Exception ex)
             {
-                // TODO: логгировать
-                throw new Exception("Не удалось сохранить чек", ex);
+                log.Error("Не удалось сохранить чек" + Environment.NewLine + ex.Message);
             }     
         }
     }
