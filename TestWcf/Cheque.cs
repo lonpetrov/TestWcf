@@ -5,7 +5,10 @@ using System.Web;
 
 namespace TestWcf
 {
-    public class Cheque : ICheque
+    /// <summary>
+    /// Чек
+    /// </summary>
+    public class Cheque
     {
         public Guid Id { get; set; }
 

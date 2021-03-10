@@ -7,7 +7,6 @@ using System.Web;
 using System.Web.Hosting;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using TestWcf.Utils;
 
 namespace TestWcf
 {
@@ -41,7 +40,7 @@ namespace TestWcf
                 .Select(node => new Cheque()
                 {
                     Id = Guid.Parse(node.Element("Id").Value),
-                    Number = node.Element("Number").Value,
+                    Number = node.Element("Number")?.Value,
                     Summ = decimal.Parse(node.Element("Summ").Value),
                     Discount = decimal.Parse(node.Element("Discount").Value),
                     Articles = node.Element("Articles")?.Value?.Split(';')
@@ -66,14 +65,14 @@ namespace TestWcf
                 }
             }
 
-            List<Cheque> cheques = new List<Cheque>();
+            var cheques = new List<Cheque>();
 
             using (FileStream fs = new FileStream(dataXmlFileName, FileMode.OpenOrCreate))
             {
-                cheques = (List<Cheque>)formatter.Deserialize(fs);
+                cheques = formatter.Deserialize(fs) as List<Cheque>;
             }
 
-            cheques.Add(cheque);
+            cheques?.Add(cheque);
 
             using (FileStream fs = new FileStream(dataXmlFileName, FileMode.Open))
             {

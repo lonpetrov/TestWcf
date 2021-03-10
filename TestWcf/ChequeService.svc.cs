@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -14,15 +15,15 @@ namespace TestWcf
 
         public CheckService()
         {
-            if (repository == null)
-            {
-                repository = new FakeDBRepository();
-            }
+            repository = new FakeDBRepository();
+
+            //var connectionString = ConfigurationManager.ConnectionStrings["SomeDBconnectionString"].ConnectionString;
+            //repository = new DBRepository(connectionString);
         }
 
-        public IEnumerable<Cheque> GetLastChecks(int count)
+        public IEnumerable<Cheque> GetLastCheques(int pack_size)
         {
-            var lastCheques = repository.GetLastCheques(count);
+            var lastCheques = repository.GetLastCheques(pack_size);
 
             return lastCheques;
         }
@@ -31,24 +32,5 @@ namespace TestWcf
         {
             repository.SaveCheck(cheque);
         }
-
-        public string GetCheck(int value)
-        {
-            return string.Format("You entered: {0}", value);
-        }
-
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
-        {
-            if (composite == null)
-            {
-                throw new ArgumentNullException("composite");
-            }
-            if (composite.BoolValue)
-            {
-                composite.StringValue += "Suffix";
-            }
-            return composite;
-        }
-
     }
 }

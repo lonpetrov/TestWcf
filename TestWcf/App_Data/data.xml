@@ -31,4 +31,13 @@
     <Summ>54</Summ>
     <Discount>333</Discount>
   </Cheque>
+  <Cheque>
+    <Id>7028a1f9-f336-4e34-8dae-279ab47be473</Id>
+    <Number>456322</Number>
+    <Summ>9998</Summ>
+    <Discount>6</Discount>
+    <Articles>
+      <string>1;2;hh;ttt</string>
+    </Articles>
+  </Cheque>
 </ArrayOfCheque>

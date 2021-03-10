@@ -104,11 +104,9 @@
     </Compile>
     <Compile Include="DBRepository.cs" />
     <Compile Include="FakeDBRepository.cs" />
-    <Compile Include="ICheque.cs" />
     <Compile Include="IChequeService.cs" />
     <Compile Include="IDBRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\XElementHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
