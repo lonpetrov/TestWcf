@@ -10,9 +10,15 @@ using System.Xml.Serialization;
 
 namespace TestWcf
 {
+    /// <summary>
+    /// Фейковый репозиторий
+    /// </summary>
     public class FakeDBRepository : IDBRepository
     {
-        string dataXmlFileName;
+        /// <summary>
+        /// Путь к файлу с данными
+        /// </summary>
+        string dataXmlFileName = null;
 
         public FakeDBRepository()
         {
@@ -25,6 +31,11 @@ namespace TestWcf
             }
         }
 
+        /// <summary>
+        /// Метод для получения списка последних добавленных чеков
+        /// </summary>
+        /// <param name="count">Число чеков</param>
+        /// <returns>Список чеков</returns>
         public IEnumerable<Cheque> GetLastCheques(int count)
         {
             // получить чеки из App_Data
@@ -51,7 +62,11 @@ namespace TestWcf
             return cheques;
         }
 
-        public void SaveCheck(Cheque cheque)
+        /// <summary>
+        /// Метод для сохранения чека
+        /// </summary>
+        /// <param name="cheque">Объект чека</param>
+        public void SaveCheque(Cheque cheque)
         {
             // сохранить чек в App_Data
 
