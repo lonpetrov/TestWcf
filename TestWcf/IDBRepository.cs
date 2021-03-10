@@ -10,6 +10,6 @@ namespace TestWcf
     {
         void SaveCheck(Cheque cheque);
 
-        IEnumerable<Cheque> GetLastChecks(int count);
+        IEnumerable<Cheque> GetLastCheques(int count);
     }
 }

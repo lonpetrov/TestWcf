@@ -10,6 +10,28 @@ namespace TestWcf
 {
     public class CheckService : IChequeService
     {
+        IDBRepository repository;
+
+        public CheckService()
+        {
+            if (repository == null)
+            {
+                repository = new FakeDBRepository();
+            }
+        }
+
+        public IEnumerable<Cheque> GetLastChecks(int count)
+        {
+            var lastCheques = repository.GetLastCheques(count);
+
+            return lastCheques;
+        }
+
+        public void ReceiveCheck(Cheque cheque)
+        {
+            repository.SaveCheck(cheque);
+        }
+
         public string GetCheck(int value)
         {
             return string.Format("You entered: {0}", value);
@@ -27,5 +49,6 @@ namespace TestWcf
             }
             return composite;
         }
+
     }
 }

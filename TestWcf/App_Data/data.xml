@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<ArrayOfCheque xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Cheque>
+    <Id>45b4bf6c-ef59-4c70-906e-37512c0f254a</Id>
+    <Number>"sdoo"</Number>
+    <Summ>4555</Summ>
+    <Discount>65</Discount>
+    <Articles />
+  </Cheque>
+  <Cheque>
+    <Id>45b4bf6c-ef59-4c70-906e-37512c0f254a</Id>
+    <Number>"sdoo1"</Number>
+    <Summ>4555</Summ>
+    <Discount>65</Discount>
+  </Cheque>
+  <Cheque>
+    <Id>45b4bf6c-ef59-4c70-906e-37512c0f254a</Id>
+    <Number>"sdoo13</Number>
+    <Summ>45554</Summ>
+    <Discount>333</Discount>
+  </Cheque>
+  <Cheque>
+    <Id>45b4bf6c-ef59-4c70-906e-37512c0f254a</Id>
+    <Number>"sdoo13</Number>
+    <Summ>455254</Summ>
+    <Discount>333</Discount>
+  </Cheque>
+  <Cheque>
+    <Id>45b4bf6c-ef59-4c70-906e-37512c0f254a</Id>
+    <Number>"ffsdoo13</Number>
+    <Summ>54</Summ>
+    <Discount>333</Discount>
+  </Cheque>
+</ArrayOfCheque>
