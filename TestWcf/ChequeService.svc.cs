@@ -20,6 +20,7 @@ namespace TestWcf
 
         public CheckService()
         {
+            // TODO: реализовать внедрение с помощью DI контейнера
             repository = new FakeDBRepository();
 
             //var connectionString = ConfigurationManager.ConnectionStrings["SomeDBconnectionString"].ConnectionString;

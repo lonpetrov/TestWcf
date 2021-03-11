@@ -87,7 +87,7 @@ namespace TestWcf
                 cheques = formatter.Deserialize(fs) as List<Cheque>;
             }
 
-            cheques?.Add(cheque);
+            cheques.Add(cheque);
 
             using (FileStream fs = new FileStream(dataXmlFileName, FileMode.Open))
             {

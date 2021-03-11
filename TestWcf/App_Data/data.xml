@@ -80,10 +80,10 @@
     </Articles>
   </Cheque>
   <Cheque>
-    <Id>63f277e4-34cf-48e0-8bc5-b2f452e4ca4e</Id>
+    <Id>45b4bf6c-ef59-4c70-906e-37512c0f254a</Id>
     <Number>456322</Number>
-    <Summ>9998.9</Summ>
-    <Discount>6.5</Discount>
+    <Summ>9998</Summ>
+    <Discount>6</Discount>
     <Articles>
       <string>article1</string>
       <string>article2</string>
@@ -94,8 +94,8 @@
   <Cheque>
     <Id>63f277e4-34cf-42e0-8bc5-b2f452e4ca4e</Id>
     <Number>456326</Number>
-    <Summ>268.9</Summ>
-    <Discount>1.5</Discount>
+    <Summ>268</Summ>
+    <Discount>1</Discount>
     <Articles>
       <string>article1</string>
       <string>article2</string>
