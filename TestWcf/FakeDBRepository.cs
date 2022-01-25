@@ -1,51 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Web;
-using System.Web.Hosting;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="FakeDBRepository.cs" company="Manzana">
+//     CheckService.
+// </copyright>
+//-----------------------------------------------------------------------
 namespace TestWcf
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Web.Hosting;
+    using System.Xml.Linq;
+    using System.Xml.Serialization;
+
     /// <summary>
-    /// Фейковый репозиторий
+    /// Fake repository.
     /// </summary>
     public class FakeDBRepository : IDBRepository
     {
         /// <summary>
-        /// Путь к файлу с данными
+        /// Path to data file.
         /// </summary>
-        string dataXmlFileName = null;
+        private string dataXmlFileName = null;
 
+        /// <summary>
+        /// Base Directory
+        /// </summary>
+        private string baseDir = null;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FakeDBRepository"/> class.
+        /// </summary>
         public FakeDBRepository()
         {
-            dataXmlFileName = Path.Combine(HostingEnvironment.ApplicationPhysicalPath, "App_Data", "data.xml");
-
-            if (!File.Exists(dataXmlFileName))
+            if (HostingEnvironment.IsHosted)
             {
-                // создать файл
-                File.Create(dataXmlFileName);
+                this.baseDir = HostingEnvironment.ApplicationPhysicalPath;
+            }
+            else
+            {
+                this.baseDir = Path.Combine(
+                                Directory.GetParent(
+                                AppDomain.CurrentDomain.BaseDirectory)
+                    .Parent.Parent
+                    .Parent.Parent
+                    .FullName, 
+                    "TestWcf");
+            }
+
+            this.dataXmlFileName = Path.Combine(
+                this.baseDir, "App_Data", "data.xml");
+
+            if (!File.Exists(this.dataXmlFileName))
+            {
+                // Create file
+                File.Create(this.dataXmlFileName);
             }
         }
 
         /// <summary>
-        /// Метод для получения списка последних добавленных чеков
+        /// Method for getting the last added cheques.
         /// </summary>
-        /// <param name="count">Число чеков</param>
-        /// <returns>Список чеков</returns>
+        /// <param name="count">Number of cheques</param>
+        /// <returns>List of cheques</returns>
         public IEnumerable<Cheque> GetLastCheques(int count)
         {
-            // получить чеки из App_Data
-
-            if (new FileInfo(dataXmlFileName).Length == 0)
+            // get from App_Data
+            if (new FileInfo(this.dataXmlFileName).Length == 0)
             {
                 return new List<Cheque>();
             }
 
-            var doc = XDocument.Load(dataXmlFileName);
+            var doc = XDocument.Load(this.dataXmlFileName);
 
             var cheques = doc.Descendants("Cheque")
                 .Select(node => new Cheque()
@@ -63,18 +92,17 @@ namespace TestWcf
         }
 
         /// <summary>
-        /// Метод для сохранения чека
+        /// Method for saving a cheque.
         /// </summary>
-        /// <param name="cheque">Объект чека</param>
+        /// <param name="cheque">Cheque object</param>
         public void SaveCheque(Cheque cheque)
         {
-            // сохранить чек в App_Data
-
+            // save to App_Data
             var formatter = new XmlSerializer(typeof(List<Cheque>));
 
-            if (new FileInfo(dataXmlFileName).Length == 0)
+            if (new FileInfo(this.dataXmlFileName).Length == 0)
             {
-                using (FileStream fs = new FileStream(dataXmlFileName, FileMode.Open))
+                using (FileStream fs = new FileStream(this.dataXmlFileName, FileMode.Open))
                 {
                     formatter.Serialize(fs, new List<Cheque>());
                 }
@@ -82,14 +110,14 @@ namespace TestWcf
 
             var cheques = new List<Cheque>();
 
-            using (FileStream fs = new FileStream(dataXmlFileName, FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream(this.dataXmlFileName, FileMode.OpenOrCreate))
             {
                 cheques = formatter.Deserialize(fs) as List<Cheque>;
             }
 
             cheques.Add(cheque);
 
-            using (FileStream fs = new FileStream(dataXmlFileName, FileMode.Open))
+            using (FileStream fs = new FileStream(this.dataXmlFileName, FileMode.Open))
             {
                 formatter.Serialize(fs, cheques);
             }

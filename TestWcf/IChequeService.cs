@@ -1,31 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.ServiceModel.Web;
-using System.Text;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="IChequeService.cs" company="Manzana">
+//     CheckService
+// </copyright>
+//-----------------------------------------------------------------------
 namespace TestWcf
 {
+    using System.Collections.Generic;
+    using System.ServiceModel;
+
     /// <summary>
-    /// Интерфейс сервиса
+    /// Service interface
     /// </summary>
     [ServiceContract]
     public interface IChequeService
     {
         /// <summary>
-        /// Метод для получения списка последних добавленных чеков
+        /// Method for getting the last added cheques.
         /// </summary>
-        /// <param name="count">Число чеков</param>
-        /// <returns>Список чеков</returns>
+        /// <param name="count">Number of cheques</param>
+        /// <returns>List of cheques</returns>
         [OperationContract]
         IEnumerable<Cheque> GetLastCheques(int count);
 
         /// <summary>
-        /// Метод для отправки чека
+        /// Method for passing cheque.
         /// </summary>
-        /// <param name="cheque">Объект чека</param>
+        /// <param name="cheque">Cheque object</param>
         [OperationContract]
         void PassCheque(Cheque cheque);
     }

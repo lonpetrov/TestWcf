@@ -1,98 +1,164 @@
-﻿using Dapper;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Web;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="DBRepository.cs" company="Manzana">
+//     CheckService
+// </copyright>
+//-----------------------------------------------------------------------
 namespace TestWcf
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+    using Dapper;
+    using Microsoft.Data.SqlClient;
+    using TestWcf.Exceptions;
+
     /// <summary>
-    /// Репозиторий БД
+    /// BD Repository
     /// </summary>
     public class DBRepository : IDBRepository
     {
         /// <summary>
-        /// Объект логгера
+        /// Logger object.
         /// </summary>
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log = 
+            log4net.LogManager.GetLogger(
+                System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
-        /// Строка подключения к БД
+        /// Connection string.
         /// </summary>
-        string connectionString = null;
+        private string connectionString = null;
 
         /// <summary>
-        /// Конструктор репозитория БД
+        /// Connection Factory
         /// </summary>
-        /// <param name="conn"></param>
+        private Func<string, IDbConnection> connectionFactory;
+
+        /// <summary>
+        /// Execute Wrapper
+        /// </summary>
+        private IExecuteWrapper executeWrapper;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DBRepository"/> class.
+        /// </summary>
+        /// <param name="conn">Connection string</param>
         public DBRepository(string conn)
         {
-            connectionString = conn;
+            this.connectionString = conn;
         }
 
         /// <summary>
-        /// Метод для получения списка последних добавленных чеков
+        /// Initializes a new instance of the <see cref="DBRepository"/> class.
         /// </summary>
-        /// <param name="count">Число чеков</param>
-        /// <returns>Список чеков</returns>
+        /// <param name="conn">Connection string</param>
+        /// <param name="connFac">Connection factory</param>
+        /// <param name="executeWrapper">Execute Wrapper</param>
+        public DBRepository(string conn, Func<string, IDbConnection> connFac, IExecuteWrapper executeWrapper = null)
+        {
+            this.connectionFactory = connFac;
+            this.connectionString = conn;
+            if (executeWrapper == null)
+            {
+                this.executeWrapper = new ExecuteWrapper();
+            }
+            else
+            {
+                this.executeWrapper = executeWrapper;
+            }      
+        }
+
+        /// <summary>
+        /// Method for getting the last added cheques.
+        /// </summary>
+        /// <param name="count">Number of cheques</param>
+        /// <returns>List of cheques</returns>
         public IEnumerable<Cheque> GetLastCheques(int count)
         {
             try
             {
-                using (IDbConnection db = new SqlConnection(connectionString))
+                if (count > 0)
                 {
-                    var cheques = db.Query<Cheque>("SELECT * FROM Cheques")
-                        .Select(ch => new Cheque()
-                        {
-                            Id = ch.Id,
-                            Number = ch.Number,
-                            Discount = ch.Discount,
-                            Summ = ch.Summ,
-                            Articles = ch.Articles.First()?.Split(';')
-                        })
-                        .ToList();
+                    using (IDbConnection db = this.connectionFactory.Invoke(this.connectionString))
+                    {
+                        var cheques = db.Query<SqlCheque>("SELECT * FROM Cheques")
+                            .Select(ch => new Cheque()
+                            {
+                                Id = ch.Id,
+                                Number = ch.Number,
+                                Discount = ch.Discount,
+                                Summ = ch.Summ,
+                                Articles = ch?.Articles?.Split(';')
+                            })
+                            .ToList();
 
-                    return cheques.Skip(Math.Max(0, cheques.Count() - count)).ToList();
+                        return cheques.Skip(Math.Max(0, cheques.Count() - count)).ToList();
+                    }
                 }
+                else
+                {
+                    throw new InvalidCountException(count);
+                }         
             }
-            catch (Exception ex)
+            catch (InvalidCountException ex)
             {
-                log.Error("Не удалось получить список чеков" + Environment.NewLine + ex.Message);
+                Log.Error("Не удалось получить список чеков" + Environment.NewLine + ex.Message +
+                    Environment.NewLine + "Invalid cheque count equals: " + ex.Count);
                 return new List<Cheque>();
+            }
+            catch
+            {
+                throw;
             }
         }
 
         /// <summary>
-        /// Метод для сохранения чека
+        /// Method for saving a cheque.
         /// </summary>
-        /// <param name="cheque">Объект чека</param>
+        /// <param name="cheque">Cheque object</param>
         public void SaveCheque(Cheque cheque)
         {
             try 
             {
-                var joinedArticles = string.Join(";", cheque.Articles);
-
-                using (IDbConnection db = new SqlConnection(connectionString))
+                if (cheque != null)
                 {
-                    var query = "INSERT INTO Cheques (Id, Number, Summ, Discount, Articles) VALUES(@Id, @Number, @Summ, @Discount, @Articles)";
+                    var joinedArticles = string.Join(";", cheque.Articles);
 
-                    var dp = new DynamicParameters();
+                    using (IDbConnection db = this.connectionFactory.Invoke(this.connectionString))
+                    {
+                        var query = "INSERT INTO Cheques (Id, Number, Summ, Discount, Articles) VALUES(@Id, @Number, @Summ, @Discount, @Articles)";
 
-                    dp.Add("@Id", cheque.Id);
-                    dp.Add("@Number", cheque.Number);
-                    dp.Add("@Summ", cheque.Id);
-                    dp.Add("@Discount", cheque.Number);
-                    dp.Add("@Articles", joinedArticles);
+                        var dp = new DynamicParameters();
 
-                    db.Execute(query, dp);
+                        dp.Add("@Id", cheque.Id);
+                        dp.Add("@Number", cheque.Number);
+                        dp.Add("@Summ", cheque.Id);
+                        dp.Add("@Discount", cheque.Number);
+                        dp.Add("@Articles", joinedArticles);
+
+                        ////db.Execute(query, dp);
+                        this.executeWrapper.Execute(db, query, dp);
+                    }
                 }
+                else
+                {
+                    throw new InvalidChequeException();
+                }   
             }
-            catch (Exception ex)
+            catch (InvalidChequeException ex)
             {
-                log.Error("Не удалось сохранить чек" + Environment.NewLine + ex.Message);
-            }     
+                Log.Error("Не удалось сохранить чек" + Environment.NewLine + ex.Message);
+            }
+            catch
+            {
+                throw;
+            }
+            ////Чтобы не выбрасывалось исключение следует раскоментировать данный код
+            ////catch (ArgumentNullException ex)
+            ////{
+            ////    Log.Error("Не удалось сохранить чек потому что значения одного или нескольких свойств равно NULL" + Environment.NewLine + ex.Message);
+            ////}
         }
     }
 }

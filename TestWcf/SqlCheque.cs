@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="Cheque.cs" company="Manzana">
+// <copyright file="SqlCheque.cs" company="Manzana">
 //     Company copyright tag.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -10,7 +10,7 @@ namespace TestWcf
     /// <summary>
     /// Cheque class.
     /// </summary>
-    public class Cheque
+    public class SqlCheque
     {
         /// <summary>
         /// Gets or sets Id.
@@ -35,6 +35,6 @@ namespace TestWcf
         /// <summary>
         /// Gets or sets Articles.
         /// </summary> 
-        public string[] Articles { get; set; }
+        public string Articles { get; set; }
     }
 }

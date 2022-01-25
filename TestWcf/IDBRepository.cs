@@ -1,23 +1,28 @@
-﻿using System.Collections.Generic;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="IDBRepository.cs" company="Manzana">
+//     CheckService
+// </copyright>
+//-----------------------------------------------------------------------
 namespace TestWcf
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// Интерфейс репозитория
+    /// Repository Interface
     /// </summary>
-    interface IDBRepository
+    public interface IDBRepository
     {
         /// <summary>
-        /// Метод для сохранения чека
+        /// Method for saving a cheque.
         /// </summary>
-        /// <param name="cheque">Объект чека</param>
+        /// <param name="cheque">Cheque object</param>
         void SaveCheque(Cheque cheque);
 
         /// <summary>
-        /// Метод для получения списка последних добавленных чеков
+        /// Method for getting the last added cheques.
         /// </summary>
-        /// <param name="count">Число чеков</param>
-        /// <returns>Список чеков</returns>
+        /// <param name="count">Number of cheques</param>
+        /// <returns>List of cheques</returns>
         IEnumerable<Cheque> GetLastCheques(int count);
     }
 }

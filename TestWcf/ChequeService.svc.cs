@@ -1,63 +1,82 @@
-﻿using System.Collections.Generic;
-using System.Configuration;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="ChequeService.svc.cs" company="Manzana">
+//     CheckService.
+// </copyright>
+//-----------------------------------------------------------------------
 namespace TestWcf
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// Сервис для добавления и получения чеков
+    /// ChequeService class
     /// </summary>
-    public class CheckService : IChequeService
+    public class ChequeService : IChequeService
     {
         /// <summary>
-        /// Объект логгера
+        /// Logger object.
         /// </summary>
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log = 
+            log4net.LogManager.GetLogger(
+                System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
-        /// Ссылка на репозиторий
+        /// Field for Repository.
         /// </summary>
-        IDBRepository repository;
+        private IDBRepository repository;
 
-        public CheckService()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChequeService"/> class.
+        /// </summary>
+        public ChequeService()
         {
             // TODO: реализовать внедрение с помощью DI контейнера
-            repository = new FakeDBRepository();
-
-            //var connectionString = ConfigurationManager.ConnectionStrings["SomeDBconnectionString"].ConnectionString;
-            //repository = new DBRepository(connectionString);
+            this.repository = new FakeDBRepository();
+            ////var connectionString = ConfigurationManager.ConnectionStrings["SomeDBconnectionString"].ConnectionString;
+            ////repository = new DBRepository(connectionString);
         }
 
         /// <summary>
-        /// Метод для получения списка последних добавленных чеков
+        /// Initializes a new instance of the <see cref="ChequeService"/> class.
         /// </summary>
-        /// <param name="count">Число чеков</param>
-        /// <returns>Список чеков</returns>
+        /// <param name="repo">Repository object</param>
+        public ChequeService(IDBRepository repo)
+        {
+            // TODO: реализовать внедрение с помощью DI контейнера
+            this.repository = repo;
+            ////var connectionString = ConfigurationManager.ConnectionStrings["SomeDBconnectionString"].ConnectionString;
+            ////repository = new DBRepository(connectionString);
+        }
+
+        /// <summary>
+        /// Gets list of last cheques.
+        /// </summary>
+        /// <param name="pack_size">Size of last cheques</param>
+        /// <returns>List of cheques</returns>
         public IEnumerable<Cheque> GetLastCheques(int pack_size)
         {
             if (pack_size <= 0)
             {
-                log.Error($"Запрошенное количество чеков \"{pack_size}\" недопустимо");
+                Log.Error($"Запрошенное количество чеков \"{pack_size}\" недопустимо");
                 return new List<Cheque>();
             }
 
-            var lastCheques = repository.GetLastCheques(pack_size);
-
+            var lastCheques = this.repository.GetLastCheques(pack_size);
             return lastCheques;
         }
 
         /// <summary>
-        /// Метод для отправки чека
+        /// Save cheques to repo.
         /// </summary>
-        /// <param name="cheque">Объект чека</param>
+        /// <param name="cheque">Cheque for passing</param>
         public void PassCheque(Cheque cheque)
         {
             if (cheque != null)
             {
-                repository.SaveCheque(cheque);
+                this.repository.SaveCheque(cheque);
             }
             else
             {
-                log.Error($"Объект чека не определён \"cheque = null\"");
+                Log.Error($"Объект чека не определён \"cheque = null\"");
             }
         }
     }
