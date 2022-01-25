@@ -1,47 +1,53 @@
-﻿using Dapper;
-using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Web;
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="DBRepository.cs" company="Manzana">
+//     CheckService
+// </copyright>
+//-----------------------------------------------------------------------
 namespace TestWcf
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+    using Dapper;
+    using Microsoft.Data.SqlClient;
+
     /// <summary>
-    /// Репозиторий БД
+    /// BD Repository
     /// </summary>
     public class DBRepository : IDBRepository
     {
         /// <summary>
-        /// Объект логгера
+        /// Logger object.
         /// </summary>
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log = 
+            log4net.LogManager.GetLogger(
+                System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
-        /// Строка подключения к БД
+        /// Connection string.
         /// </summary>
-        string connectionString = null;
+        private string connectionString = null;
 
         /// <summary>
-        /// Конструктор репозитория БД
+        /// Initializes a new instance of the <see cref="DBRepository"/> class.
         /// </summary>
-        /// <param name="conn"></param>
+        /// <param name="conn">Connection string</param>
         public DBRepository(string conn)
         {
-            connectionString = conn;
+            this.connectionString = conn;
         }
 
         /// <summary>
-        /// Метод для получения списка последних добавленных чеков
+        /// Method for getting the last added cheques.
         /// </summary>
-        /// <param name="count">Число чеков</param>
-        /// <returns>Список чеков</returns>
+        /// <param name="count">Number of cheques</param>
+        /// <returns>List of cheques</returns>
         public IEnumerable<Cheque> GetLastCheques(int count)
         {
             try
             {
-                using (IDbConnection db = new SqlConnection(connectionString))
+                using (IDbConnection db = new SqlConnection(this.connectionString))
                 {
                     var cheques = db.Query<Cheque>("SELECT * FROM Cheques")
                         .Select(ch => new Cheque()
@@ -59,22 +65,22 @@ namespace TestWcf
             }
             catch (Exception ex)
             {
-                log.Error("Не удалось получить список чеков" + Environment.NewLine + ex.Message);
+                Log.Error("Не удалось получить список чеков" + Environment.NewLine + ex.Message);
                 return new List<Cheque>();
             }
         }
 
         /// <summary>
-        /// Метод для сохранения чека
+        /// Method for saving a cheque.
         /// </summary>
-        /// <param name="cheque">Объект чека</param>
+        /// <param name="cheque">Cheque object</param>
         public void SaveCheque(Cheque cheque)
         {
             try 
             {
                 var joinedArticles = string.Join(";", cheque.Articles);
 
-                using (IDbConnection db = new SqlConnection(connectionString))
+                using (IDbConnection db = new SqlConnection(this.connectionString))
                 {
                     var query = "INSERT INTO Cheques (Id, Number, Summ, Discount, Articles) VALUES(@Id, @Number, @Summ, @Discount, @Articles)";
 
@@ -91,7 +97,7 @@ namespace TestWcf
             }
             catch (Exception ex)
             {
-                log.Error("Не удалось сохранить чек" + Environment.NewLine + ex.Message);
+                Log.Error("Не удалось сохранить чек" + Environment.NewLine + ex.Message);
             }     
         }
     }

@@ -1,1 +1,1 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" Service="TestWcf.CheckService" CodeBehind="ChequeService.svc.cs" %>
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="TestWcf.ChequeService" CodeBehind="ChequeService.svc.cs" %>
