@@ -10,7 +10,7 @@ namespace TestWcf
     /// <summary>
     /// Repository Interface
     /// </summary>
-    internal interface IDBRepository
+    public interface IDBRepository
     {
         /// <summary>
         /// Method for saving a cheque.

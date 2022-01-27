@@ -6,7 +6,6 @@
 namespace TestWcfTests
 {
     using System;
-    using System.Collections.Generic;
     using NUnit.Framework;
     using TestWcf;
 
@@ -25,7 +24,8 @@ namespace TestWcfTests
             cheque.Id = guid;
 
             //Assert
-            Assert.AreEqual(new Guid("00000000-0000-0000-0000-000000000000"), cheque.Id);
+            Assert.That(
+                new Guid("00000000-0000-0000-0000-000000000000"), Is.EqualTo(cheque.Id));
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace TestWcfTests
             cheque.Id = (Guid)testGuid;
 
             //Assert
-            Assert.IsNull(cheque.Id);
+            Assert.That(cheque.Id, Is.Null);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace TestWcfTests
             cheque.Number = number;
 
             //Assert
-            Assert.AreEqual("test string", cheque.Number);
+            Assert.That(cheque.Number, Is.EqualTo("test string"));
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace TestWcfTests
             cheque.Summ = summ;
 
             //Assert
-            Assert.AreEqual(20.000M, cheque.Summ);
+            Assert.That(cheque.Summ, Is.EqualTo(20.000M));
         }
 
         [Test]
@@ -81,7 +81,7 @@ namespace TestWcfTests
             cheque.Summ = (decimal)summ;
 
             //Assert
-            Assert.IsNull(cheque.Summ);
+            Assert.That(cheque.Summ, Is.Null);
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace TestWcfTests
             cheque.Discount = discount;
 
             //Assert
-            Assert.AreEqual(20.000M, cheque.Discount);
+            Assert.That(cheque.Discount, Is.EqualTo(20.000M));
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace TestWcfTests
             cheque.Discount = (decimal)discount;
 
             //Assert
-            Assert.IsNull(cheque.Discount);
+            Assert.That(cheque.Discount, Is.Null);
         }
 
         [Test]
@@ -123,8 +123,8 @@ namespace TestWcfTests
             cheque.Articles = array;
 
             //Assert
-            Assert.That(cheque.Articles.Length == 3);
-            Assert.AreEqual(new[] { "string1", "string2", "string3" }, cheque.Articles);
+            Assert.That(cheque.Articles, Has.Length.EqualTo(3));
+            Assert.That(new[] { "string1", "string2", "string3" }, Is.EqualTo(cheque.Articles));
 
         }
     }
