@@ -35,6 +35,14 @@ namespace TestWcf
             ////repository = new DBRepository(connectionString);
         }
 
+        public ChequeService(IDBRepository repo)
+        {
+            // TODO: реализовать внедрение с помощью DI контейнера
+            this.repository = repo;
+            ////var connectionString = ConfigurationManager.ConnectionStrings["SomeDBconnectionString"].ConnectionString;
+            ////repository = new DBRepository(connectionString);
+        }
+
         /// <summary>
         /// Gets list of last cheques.
         /// </summary>

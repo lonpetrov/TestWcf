@@ -29,6 +29,7 @@ namespace TestWcf
         /// </summary>
         private string connectionString = null;
 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DBRepository"/> class.
         /// </summary>
@@ -38,6 +39,7 @@ namespace TestWcf
             this.connectionString = conn;
         }
 
+        
         /// <summary>
         /// Method for getting the last added cheques.
         /// </summary>

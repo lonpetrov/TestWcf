@@ -12,7 +12,9 @@ namespace TestWcfTests
         [Test]
         public void GetLastCheques_GreaterThanZeroCount_ReturnListOfChecques()
         {
-            var mockRepository = Mock.Of<IDBRepository>
+            var mockRepository = new Mock<IDBRepository>();
+            //mockRepository.Setup<Cheque>();
+            
         }
     }
 }
