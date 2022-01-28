@@ -13,16 +13,14 @@
         public void CheqqueServicesGetLastCheques_GreaterThanZeroCount_ReturnListOfChecquesWithCount3()
         {
             //Arrange
-            var mockRepository = new Mock<IDBRepository>();
-            mockRepository.Setup(mock => mock.GetLastCheques(3)).Returns(
-                new List<Cheque> {
-                    new Cheque{Number="1"},
-                    new Cheque{Number="2"},
-                    new Cheque{Number="3"},
-                });
-            
+            var mockRepository = Mock
+                .Of<IDBRepository>(m => m
+                .GetLastCheques(3) == new List<Cheque> {
+                  new Cheque{Number="1"},
+                  new Cheque{Number="2"},
+                  new Cheque{Number="3"}, });
 
-            var chequeService = new ChequeService(mockRepository.Object);
+            var chequeService = new ChequeService(mockRepository);
 
             //Act
             var lastCheques = (IList<Cheque>)chequeService.GetLastCheques(3);
@@ -55,20 +53,32 @@
         }
 
         [Test]
-        public void CheqqueServicesPassCheque_GetsCheque_ChequeSavedInRepo()
+        public void PassCheque_GetsCheque_ChequeSavedInRepo()
         {
             //Arrange
-            var cheque = new Cheque();
             var mockRepository = new Mock<IDBRepository>();
-            mockRepository.Setup(mock => mock.SaveCheque(cheque);
-
             var chequeService = new ChequeService(mockRepository.Object);
 
             //Act
-            var lastCheques = (IList<Cheque>)chequeService.GetLastCheques(count);
+            chequeService.PassCheque(new Cheque());
 
             //Assert
-            Assert.That(lastCheques, Is.Empty);
+            mockRepository.Verify(mock => mock.SaveCheque(It.IsAny<Cheque>()), Times.Once);
         }
+
+        [Test]
+        public void PassCheque_GetsNull_ChequeNotSaved()
+        {
+            //Arrange
+            var mockRepository = new Mock<IDBRepository>();
+            var chequeService = new ChequeService(mockRepository.Object);
+
+            //Act
+            chequeService.PassCheque(null);
+
+            //Assert
+            mockRepository.Verify(mock => mock.SaveCheque(It.IsAny<Cheque>()), Times.Never);
+        }
+
     }
 }
