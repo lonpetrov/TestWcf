@@ -15,7 +15,7 @@ namespace TestWcf
         /// <summary>
         /// Gets or sets Id.
         /// </summary> 
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         /// <summary>
         /// Gets or sets Number.
@@ -25,12 +25,12 @@ namespace TestWcf
         /// <summary>
         /// Gets or sets Sum.
         /// </summary> 
-        public decimal Summ { get; set; }
+        public decimal? Summ { get; set; }
 
         /// <summary>
         /// Gets or sets Discount.
         /// </summary> 
-        public decimal Discount { get; set; }
+        public decimal? Discount { get; set; }
 
         /// <summary>
         /// Gets or sets Articles.

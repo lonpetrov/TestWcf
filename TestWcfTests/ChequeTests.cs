@@ -36,7 +36,7 @@ namespace TestWcfTests
             object testGuid = null;
             
             //Act
-            cheque.Id = (Guid)testGuid;
+            cheque.Id = (Guid?)testGuid;
 
             //Assert
             Assert.That(cheque.Id, Is.Null);
@@ -78,7 +78,7 @@ namespace TestWcfTests
             object summ = null;
 
             //Act 
-            cheque.Summ = (decimal)summ;
+            cheque.Summ = (decimal?)summ;
 
             //Assert
             Assert.That(cheque.Summ, Is.Null);
@@ -106,7 +106,7 @@ namespace TestWcfTests
             object discount = null;
 
             //Act 
-            cheque.Discount = (decimal)discount;
+            cheque.Discount = (decimal?)discount;
 
             //Assert
             Assert.That(cheque.Discount, Is.Null);
