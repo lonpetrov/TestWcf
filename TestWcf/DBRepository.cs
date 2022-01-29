@@ -29,6 +29,7 @@ namespace TestWcf
         /// </summary>
         private string connectionString = null;
 
+        private Func<string, IDbConnection> connectionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DBRepository"/> class.
@@ -39,7 +40,12 @@ namespace TestWcf
             this.connectionString = conn;
         }
 
-        
+        public DBRepository(string conn, Func<string, IDbConnection> dbConnFac)
+        {
+            this.connectionFactory = dbConnFac;
+            this.connectionString = conn;
+        }
+
         /// <summary>
         /// Method for getting the last added cheques.
         /// </summary>
@@ -49,16 +55,16 @@ namespace TestWcf
         {
             try
             {
-                using (IDbConnection db = new SqlConnection(this.connectionString))
+                using (IDbConnection db = connectionFactory.Invoke(connectionString))
                 {
-                    var cheques = db.Query<Cheque>("SELECT * FROM Cheques")
+                    var cheques = db.Query<SqlCheque>("SELECT * FROM Cheques")
                         .Select(ch => new Cheque()
                         {
                             Id = ch.Id,
                             Number = ch.Number,
                             Discount = ch.Discount,
                             Summ = ch.Summ,
-                            Articles = ch.Articles.First()?.Split(';')
+                            Articles = ch?.Articles.Split(';')
                         })
                         .ToList();
 
@@ -82,7 +88,7 @@ namespace TestWcf
             {
                 var joinedArticles = string.Join(";", cheque.Articles);
 
-                using (IDbConnection db = new SqlConnection(this.connectionString))
+                using (IDbConnection db = connectionFactory.Invoke(connectionString))
                 {
                     var query = "INSERT INTO Cheques (Id, Number, Summ, Discount, Articles) VALUES(@Id, @Number, @Summ, @Discount, @Articles)";
 
