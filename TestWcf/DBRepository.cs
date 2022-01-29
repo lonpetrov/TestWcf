@@ -11,6 +11,7 @@ namespace TestWcf
     using System.Linq;
     using Dapper;
     using Microsoft.Data.SqlClient;
+    using TestWcf.Exceptions;
 
     /// <summary>
     /// BD Repository
@@ -55,26 +56,35 @@ namespace TestWcf
         {
             try
             {
-                using (IDbConnection db = connectionFactory.Invoke(connectionString))
+                if (count > 0)
                 {
-                    var cheques = db.Query<SqlCheque>("SELECT * FROM Cheques")
-                        .Select(ch => new Cheque()
-                        {
-                            Id = ch.Id,
-                            Number = ch.Number,
-                            Discount = ch.Discount,
-                            Summ = ch.Summ,
-                            Articles = ch?.Articles.Split(';')
-                        })
-                        .ToList();
+                    using (IDbConnection db = connectionFactory.Invoke(connectionString))
+                    {
+                        var cheques = db.Query<SqlCheque>("SELECT * FROM Cheques")
+                            .Select(ch => new Cheque()
+                            {
+                                Id = ch.Id,
+                                Number = ch.Number,
+                                Discount = ch.Discount,
+                                Summ = ch.Summ,
+                                Articles = ch?.Articles?.Split(';')
+                            })
+                            .ToList();
 
-                    return cheques.Skip(Math.Max(0, cheques.Count() - count)).ToList();
+                        return cheques.Skip(Math.Max(0, cheques.Count() - count)).ToList();
+                    }
                 }
+                throw new InvalidCountException(count);
             }
-            catch (Exception ex)
+            catch (InvalidCountException ex)
             {
-                Log.Error("Не удалось получить список чеков" + Environment.NewLine + ex.Message);
+                Log.Error("Не удалось получить список чеков" + Environment.NewLine + ex.Message +
+                    Environment.NewLine + "Invalid cheque count equals: " + ex.Count);
                 return new List<Cheque>();
+            }
+            catch
+            {
+                throw;
             }
         }
 
