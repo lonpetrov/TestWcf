@@ -19,4 +19,8 @@
     <ProjectReference Include="..\TestWcf\TestWcf.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Web" />
+  </ItemGroup>
+
 </Project>

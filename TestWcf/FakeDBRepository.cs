@@ -8,8 +8,10 @@ namespace TestWcf
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Web.Hosting;
     using System.Xml.Linq;
     using System.Xml.Serialization;
@@ -24,13 +26,28 @@ namespace TestWcf
         /// </summary>
         private string dataXmlFileName = null;
 
+        private string baseDir = null;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FakeDBRepository"/> class.
         /// </summary>
         public FakeDBRepository()
         {
+            if (HostingEnvironment.IsHosted)
+            {
+                this.baseDir = HostingEnvironment.ApplicationPhysicalPath;
+            }
+            else
+            {
+                this.baseDir = Path.Combine(Directory
+                    .GetParent(AppDomain.CurrentDomain.BaseDirectory)
+                    .Parent.Parent
+                    .Parent.Parent
+                    .FullName, "TestWcf");
+            }
+
             this.dataXmlFileName = Path.Combine(
-                HostingEnvironment.ApplicationPhysicalPath, "App_Data", "data.xml");
+                this.baseDir, "App_Data", "data.xml");
 
             if (!File.Exists(this.dataXmlFileName))
             {

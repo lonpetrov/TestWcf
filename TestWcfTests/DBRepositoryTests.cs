@@ -24,7 +24,7 @@ namespace TestWcfTests
                 new SqlCheque()
                 {
                     Id = new Guid(),
-                    Number = "",
+                    Number = "some",
                     Discount = 2.0M,
                     Summ = 2.0M,
                     Articles = "article1;article2;article3"
@@ -32,7 +32,7 @@ namespace TestWcfTests
                 new SqlCheque()
                 {
                     Id = new Guid(),
-                    Number = "",
+                    Number = "some",
                     Discount = 2.0M,
                     Summ = 2.0M,
                     Articles = "article1;article2;article3"
@@ -40,7 +40,7 @@ namespace TestWcfTests
                 new SqlCheque()
                 {
                     Id = new Guid(),
-                    Number = "",
+                    Number = "some",
                     Discount = 2.0M,
                     Summ = 2.0M,
                     Articles = "article1;article2;article3"
@@ -48,7 +48,7 @@ namespace TestWcfTests
                 new SqlCheque()
                 {
                     Id = new Guid(),
-                    Number = "",
+                    Number = "some",
                     Discount = 2.0M,
                     Summ = 2.0M,
                     Articles = "article1;article2;article3"
@@ -56,7 +56,7 @@ namespace TestWcfTests
                 new SqlCheque()
                 {
                     Id = new Guid(),
-                    Number = "",
+                    Number = "some",
                     Discount = 2.0M,
                     Summ = 2.0M,
                     Articles = "article1;article2;article3"
@@ -97,7 +97,7 @@ namespace TestWcfTests
                 new SqlCheque()
                 {
                     Id = new Guid(),
-                    Number = "",
+                    Number = "some",
                     Discount = 2.0M,
                     Summ = 2.0M,
                     Articles = "article1;article2;article3"
@@ -105,7 +105,7 @@ namespace TestWcfTests
                 new SqlCheque()
                 {
                     Id = new Guid(),
-                    Number = "",
+                    Number = "some",
                     Discount = 2.0M,
                     Summ = 2.0M,
                     Articles = "article1;article2;article3"
@@ -113,7 +113,7 @@ namespace TestWcfTests
                 new SqlCheque()
                 {
                     Id = new Guid(),
-                    Number = "",
+                    Number = "some",
                     Discount = 2.0M,
                     Summ = 2.0M,
                     Articles = "article1;article2;article3"
@@ -121,7 +121,7 @@ namespace TestWcfTests
                 new SqlCheque()
                 {
                     Id = new Guid(),
-                    Number = "",
+                    Number = "some",
                     Discount = 2.0M,
                     Summ = 2.0M,
                     Articles = "article1;article2;article3"
@@ -129,7 +129,7 @@ namespace TestWcfTests
                 new SqlCheque()
                 {
                     Id = new Guid(),
-                    Number = "",
+                    Number = "some",
                     Discount = 2.0M,
                     Summ = 2.0M,
                     Articles = "article1;article2;article3"
@@ -158,7 +158,7 @@ namespace TestWcfTests
         }
 
         [Test]
-        public void GetLastCheques_GetsNullsFromDB_ReturnEmptyList()
+        public void GetLastCheques_GetsNullsFromDB_DoesNotThrowExeption()
         {
             //Arrange
             IEnumerable<SqlCheque> fakeQueryResults = new List<SqlCheque>
@@ -222,9 +222,10 @@ namespace TestWcfTests
 
             //Act
             whenNullsCameFromDb = () => repo.GetLastCheques(3);
-
+            var lastCheques = repo.GetLastCheques(3);
             //Assert
             Assert.DoesNotThrow(whenNullsCameFromDb);
+            Assert.That(lastCheques, Has.Count.EqualTo(3));
             //Assert.Throws<NullReferenceException>(whenNullsCameFromDb);
 
         }
@@ -311,7 +312,7 @@ namespace TestWcfTests
         }
 
         [Test]
-        public void SaveCheque_GetsChequeWithNulls_ChequeNotAddedToDB()
+        public void SaveCheque_GetsChequeWithNulls_ThrowsArgumentNullException()
         {
             //Arrange
             var cheque = new Cheque()
