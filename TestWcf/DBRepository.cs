@@ -30,8 +30,14 @@ namespace TestWcf
         /// </summary>
         private string connectionString = null;
 
+        /// <summary>
+        /// Connection Factory
+        /// </summary>
         private Func<string, IDbConnection> connectionFactory;
 
+        /// <summary>
+        /// Execute Wrapper
+        /// </summary>
         private IExecuteWrapper executeWrapper;
 
         /// <summary>
@@ -43,19 +49,24 @@ namespace TestWcf
             this.connectionString = conn;
         }
 
-        public DBRepository(string conn, Func<string, IDbConnection> dbConnFac, IExecuteWrapper exWrap=null)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DBRepository"/> class.
+        /// </summary>
+        /// <param name="conn">Connection string</param>
+        /// <param name="connFac">Connection factory</param>
+        /// <param name="executeWrapper">Execute Wrapper</param>
+        public DBRepository(string conn, Func<string, IDbConnection> connFac, IExecuteWrapper executeWrapper = null)
         {
-            this.connectionFactory = dbConnFac;
+            this.connectionFactory = connFac;
             this.connectionString = conn;
-            if (exWrap == null)
+            if (executeWrapper == null)
             {
                 this.executeWrapper = new ExecuteWrapper();
             }
             else
             {
-                this.executeWrapper = exWrap;
-            }
-            
+                this.executeWrapper = executeWrapper;
+            }      
         }
 
         /// <summary>
@@ -69,7 +80,7 @@ namespace TestWcf
             {
                 if (count > 0)
                 {
-                    using (IDbConnection db = connectionFactory.Invoke(connectionString))
+                    using (IDbConnection db = this.connectionFactory.Invoke(this.connectionString))
                     {
                         var cheques = db.Query<SqlCheque>("SELECT * FROM Cheques")
                             .Select(ch => new Cheque()
@@ -88,8 +99,7 @@ namespace TestWcf
                 else
                 {
                     throw new InvalidCountException(count);
-                }
-                
+                }         
             }
             catch (InvalidCountException ex)
             {
@@ -115,7 +125,7 @@ namespace TestWcf
                 {
                     var joinedArticles = string.Join(";", cheque.Articles);
 
-                    using (IDbConnection db = connectionFactory.Invoke(connectionString))
+                    using (IDbConnection db = this.connectionFactory.Invoke(this.connectionString))
                     {
                         var query = "INSERT INTO Cheques (Id, Number, Summ, Discount, Articles) VALUES(@Id, @Number, @Summ, @Discount, @Articles)";
 
@@ -127,8 +137,8 @@ namespace TestWcf
                         dp.Add("@Discount", cheque.Number);
                         dp.Add("@Articles", joinedArticles);
 
-                        //db.Execute(query, dp);
-                        executeWrapper.Execute(db, query, dp);
+                        ////db.Execute(query, dp);
+                        this.executeWrapper.Execute(db, query, dp);
                     }
                 }
                 else
@@ -140,15 +150,15 @@ namespace TestWcf
             {
                 Log.Error("Не удалось сохранить чек" + Environment.NewLine + ex.Message);
             }
-            //Чтобы не выбрасывалось исключение следует раскоментировать данный код
-            //catch (ArgumentNullException ex)
-            //{
-            //    Log.Error("Не удалось сохранить чек потому что значения одного или нескольких свойств равно NULL" + Environment.NewLine + ex.Message);
-            //}
             catch
             {
                 throw;
             }
+            ////Чтобы не выбрасывалось исключение следует раскоментировать данный код
+            ////catch (ArgumentNullException ex)
+            ////{
+            ////    Log.Error("Не удалось сохранить чек потому что значения одного или нескольких свойств равно NULL" + Environment.NewLine + ex.Message);
+            ////}
         }
     }
 }

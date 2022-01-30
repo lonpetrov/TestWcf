@@ -242,4 +242,48 @@
       <string>article3</string>
     </Articles>
   </Cheque>
+  <Cheque>
+    <Id>00000000-0000-0000-0000-000000000000</Id>
+    <Number>some</Number>
+    <Summ>2000</Summ>
+    <Discount>200</Discount>
+    <Articles>
+      <string>article1</string>
+      <string>article2</string>
+      <string>article3</string>
+    </Articles>
+  </Cheque>
+  <Cheque>
+    <Id>00000000-0000-0000-0000-000000000000</Id>
+    <Number>some</Number>
+    <Summ>2000</Summ>
+    <Discount>200</Discount>
+    <Articles>
+      <string>article1</string>
+      <string>article2</string>
+      <string>article3</string>
+    </Articles>
+  </Cheque>
+  <Cheque>
+    <Id>00000000-0000-0000-0000-000000000000</Id>
+    <Number>some</Number>
+    <Summ>2000</Summ>
+    <Discount>200</Discount>
+    <Articles>
+      <string>article1</string>
+      <string>article2</string>
+      <string>article3</string>
+    </Articles>
+  </Cheque>
+  <Cheque>
+    <Id>10000000-0000-0000-0000-000000000000</Id>
+    <Number>some</Number>
+    <Summ>2000</Summ>
+    <Discount>200</Discount>
+    <Articles>
+      <string>article1</string>
+      <string>article2</string>
+      <string>article3</string>
+    </Articles>
+  </Cheque>
 </ArrayOfCheque>

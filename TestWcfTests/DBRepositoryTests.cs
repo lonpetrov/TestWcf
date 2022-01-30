@@ -1,24 +1,34 @@
-﻿
+﻿//-----------------------------------------------------------------------
+// <copyright file="DBRepositoryTests.cs" company="Manzana">
+//     CheckService
+// </copyright>
+// <summary>This is Test class</summary>
+//-----------------------------------------------------------------------
 namespace TestWcfTests
 {
     using System;
-    using NUnit.Framework;
-    using Moq;
-    using TestWcf;
     using System.Collections.Generic;
-    using Moq.Dapper;
-    using System.Linq;
     using System.Data;
+    using System.Linq;
     using Dapper;
-    using TestWcf.Exceptions;
+    using Moq;
+    using Moq.Dapper;
+    using NUnit.Framework;
+    using TestWcf;
 
+    /// <summary>
+    /// DBRepository Tests.
+    /// </summary>
     [TestFixture]
-    class DBRepositoryTests
+    public class DBRepositoryTests
     {
+        /// <summary>
+        /// GetLastCheques GetsCountofCheques ReturnLastCheques.
+        /// </summary>
         [Test]
         public void GetLastCheques_GetsCountofCheques_ReturnLastCheques()
         {
-            //Arrange
+            ////Arrange
             IEnumerable<SqlCheque> fakeQueryResults = new List<SqlCheque>
             {
                 new SqlCheque()
@@ -69,29 +79,33 @@ namespace TestWcfTests
                 .Query<SqlCheque>(It.IsAny<string>(), null, null, true, null, null))
                 .Returns(fakeQueryResults);
 
-
             var repo = new DBRepository(
-                connectionString, (conStr) =>
+                connectionString, 
+                (conStr) =>
                 {
                     mockConnection.Object.ConnectionString = conStr;
                     return mockConnection.Object;
                 });
 
-            //Act
+            ////Act
             var actualCheques = repo.GetLastCheques(3);
 
-            //Assert
+            ////Assert
             Assert.That(actualCheques.Count(), Is.EqualTo(3));
             Assert.That(actualCheques.AsList()[0].Articles, Is.TypeOf<string[]>());
             Assert.That(actualCheques.AsList()[0].Articles.Count(), Is.EqualTo(3));
         }
 
+        /// <summary>
+        /// GetLastCheques GetsZeroOrLessCount ReturnEmptyList.
+        /// </summary>
+        /// <param name="count">Case count.</param>
         [Test]
         [TestCase(0)]
         [TestCase(-1)]
         public void GetLastCheques_GetsZeroOrLessCount_ReturnEmptyList(int count)
         {
-            //Arrange
+            ////Arrange
             IEnumerable<SqlCheque> fakeQueryResults = new List<SqlCheque>
             {
                 new SqlCheque()
@@ -142,25 +156,28 @@ namespace TestWcfTests
                 .Query<SqlCheque>(It.IsAny<string>(), null, null, true, null, null))
                 .Returns(fakeQueryResults);
 
-
             var repo = new DBRepository(
-                connectionString, (conStr) =>
+                connectionString, 
+                (conStr) =>
                 {
                     mockConnection.Object.ConnectionString = conStr;
                     return mockConnection.Object;
                 });
 
-            //Act
+            ////Act
             var actualCheques = repo.GetLastCheques(count);
 
-            //Assert
+            ////Assert
             Assert.That(actualCheques, Is.Empty);
         }
 
+        /// <summary>
+        /// GetLastCheques GetsNullsFromDB DoesNotThrowExeption.
+        /// </summary>
         [Test]
         public void GetLastCheques_GetsNullsFromDB_DoesNotThrowExeption()
         {
-            //Arrange
+            ////Arrange
             IEnumerable<SqlCheque> fakeQueryResults = new List<SqlCheque>
             {
                 new SqlCheque()
@@ -211,41 +228,44 @@ namespace TestWcfTests
                 .Query<SqlCheque>(It.IsAny<string>(), null, null, true, null, null))
                 .Returns(fakeQueryResults);
 
-
             var repo = new DBRepository(
-                connectionString, (conStr) =>
+                connectionString, 
+                (conStr) =>
                 {
                     mockConnection.Object.ConnectionString = conStr;
                     return mockConnection.Object;
                 });
             TestDelegate whenNullsCameFromDb;
 
-            //Act
+            ////Act
             whenNullsCameFromDb = () => repo.GetLastCheques(3);
             var lastCheques = repo.GetLastCheques(3);
-            //Assert
+            ////Assert
             Assert.DoesNotThrow(whenNullsCameFromDb);
             Assert.That(lastCheques, Has.Count.EqualTo(3));
-            //Assert.Throws<NullReferenceException>(whenNullsCameFromDb);
-
+            ////Assert.Throws<NullReferenceException>(whenNullsCameFromDb);
         }
 
+        /// <summary>
+        /// SaveCheque GetsChequeObject ChequeAddedToDB.
+        /// </summary>
         [Test]
         public void SaveCheque_GetsChequeObject_ChequeAddedToDB()
         {
-            //Arrange
+            ////Arrange
             var cheque = new Cheque()
             {
                 Id = new Guid(),
-                Number = "",
+                Number = string.Empty,
                 Discount = 2.0M,
                 Summ = 2.0M,
-                Articles = new []{"article1", "article2", "article3" }
+                Articles = new[] { "article1", "article2", "article3" },
             };
 
             var connectionString = "connection string";
             var mockExecuteObject = Mock.Of<IExecuteWrapper>(
-                m => m.Execute(It.IsAny<IDbConnection>(),
+                m => m.Execute(
+                    It.IsAny<IDbConnection>(),
                     It.IsAny<string>(), 
                     It.IsAny<DynamicParameters>()) == 1);
 
@@ -262,27 +282,31 @@ namespace TestWcfTests
                 },
                 mockExecuteObject);
 
-            //Act
+            ////Act
             repo.SaveCheque(cheque);
 
-            //Assert
-            mockExecute.Verify(m => m.Execute(
+            ////Assert
+            mockExecute.Verify(
+                m => m.Execute(
                 It.IsAny<IDbConnection>(),
                 It.IsAny<string>(), 
                 It.IsAny<DynamicParameters>()),
                 Times.Once);
-
         }
 
+        /// <summary>
+        /// SaveCheque GetsNullObject ChequeNotAddedToDB.
+        /// </summary>
         [Test]
         public void SaveCheque_GetsNullObject_ChequeNotAddedToDB()
         {
-            //Arrange
+            ////Arrange
             Cheque cheque = null;
 
             var connectionString = "connection string";
             var mockExecuteObject = Mock.Of<IExecuteWrapper>(
-                m => m.Execute(It.IsAny<IDbConnection>(),
+                m => m.Execute(
+                    It.IsAny<IDbConnection>(),
                     It.IsAny<string>(),
                     It.IsAny<DynamicParameters>()) == 1);
 
@@ -299,22 +323,25 @@ namespace TestWcfTests
                 },
                 mockExecuteObject);
 
-            //Act
+            ////Act
             repo.SaveCheque(cheque);
 
-            //Assert
-            mockExecute.Verify(m => m.Execute(
+            ////Assert
+            mockExecute.Verify(
+                m => m.Execute(
                 It.IsAny<IDbConnection>(),
                 It.IsAny<string>(),
                 It.IsAny<DynamicParameters>()),
                 Times.Never);
-
         }
 
+        /// <summary>
+        /// SaveCheque GetsChequeWithNulls ThrowsArgumentNullException.
+        /// </summary>
         [Test]
         public void SaveCheque_GetsChequeWithNulls_ThrowsArgumentNullException()
         {
-            //Arrange
+            ////Arrange
             var cheque = new Cheque()
             {
                 Id = null,
@@ -326,7 +353,8 @@ namespace TestWcfTests
 
             var connectionString = "connection string";
             var mockExecuteObject = Mock.Of<IExecuteWrapper>(
-                m => m.Execute(It.IsAny<IDbConnection>(),
+                m => m.Execute(
+                    It.IsAny<IDbConnection>(),
                     It.IsAny<string>(),
                     It.IsAny<DynamicParameters>()) == 1);
 
@@ -344,19 +372,20 @@ namespace TestWcfTests
                 mockExecuteObject);
             TestDelegate whenValuesAreNulls;
 
-            //Act
+            ////Act
             whenValuesAreNulls = () => repo.SaveCheque(cheque);
 
-            //Assert
-            mockExecute.Verify(m => m.Execute(
+            ////Assert
+            mockExecute.Verify(
+                m => m.Execute(
                 It.IsAny<IDbConnection>(),
                 It.IsAny<string>(),
                 It.IsAny<DynamicParameters>()),
                 Times.Never);
             Assert.Throws<ArgumentNullException>(whenValuesAreNulls);
-            //Assert.DoesNotThrow(whenValuesAreNulls);
-            //Чтобы исправить следует добавить блок catch в 
-            //DBRepository
+            ////Assert.DoesNotThrow(whenValuesAreNulls);
+            ////Чтобы исправить следует добавить блок catch в 
+            ////DBRepository
         }
     }
 }

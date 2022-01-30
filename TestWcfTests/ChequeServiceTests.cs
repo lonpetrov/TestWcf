@@ -1,84 +1,105 @@
-﻿namespace TestWcfTests
+﻿//-----------------------------------------------------------------------
+// <copyright file="ChequeServiceTests.cs" company="Manzana">
+//     CheckService
+// </copyright>
+// <summary>This is Test class</summary>
+//-----------------------------------------------------------------------
+namespace TestWcfTests
 {
-    using System;
-    using NUnit.Framework;
-    using Moq;
-    using TestWcf;
     using System.Collections.Generic;
+    using Moq;
+    using NUnit.Framework;
+    using TestWcf;
 
+    /// <summary>
+    /// ChequeServices Test.
+    /// </summary>
     [TestFixture]
-    class ChequeServiceTests
+    public class ChequeServiceTests
     {
+        /// <summary>
+        /// CheqqueServicesGetLastCheques GreaterThanZeroCount ReturnListOfChecquesWithCount3.
+        /// </summary>
         [Test]
         public void CheqqueServicesGetLastCheques_GreaterThanZeroCount_ReturnListOfChecquesWithCount3()
         {
-            //Arrange
+            ////Arrange
             var mockRepository = Mock
                 .Of<IDBRepository>(m => m
-                .GetLastCheques(3) == new List<Cheque> {
-                  new Cheque{Number="1"},
-                  new Cheque{Number="2"},
-                  new Cheque{Number="3"}, });
+                .GetLastCheques(3) == new List<Cheque> 
+                {
+                  new Cheque { Number = "1" },
+                  new Cheque { Number = "2" },
+                  new Cheque { Number = "3" }, 
+                });
 
             var chequeService = new ChequeService(mockRepository);
 
-            //Act
+            ////Act
             var lastCheques = (IList<Cheque>)chequeService.GetLastCheques(3);
                 
-            //Assert
+            ////Assert
             Assert.That(lastCheques.Count, Is.EqualTo(3));
             Assert.That(lastCheques[0].Number, Is.EqualTo("1"));
             Assert.That(lastCheques[1].Number, Is.EqualTo("2"));
             Assert.That(lastCheques[2].Number, Is.EqualTo("3"));
-
         }
 
+        /// <summary>
+        /// GetLastCheques LessOrEqualsZeroCount ReturnEmptyListOfChecques.
+        /// </summary>
+        /// <param name="count">Count case.</param>
         [Test]
         [TestCase(0)]
         [TestCase(-1)]
         public void CheqqueServicesGetLastCheques_LessOrEqualsZeroCount_ReturnEmptyListOfChecques(int count)
         {
-            //Arrange
+            ////Arrange
             var mockRepository = new Mock<IDBRepository>();
             mockRepository.Setup(mock => mock.GetLastCheques(count)).Returns(
                 new List<Cheque>());
 
             var chequeService = new ChequeService(mockRepository.Object);
 
-            //Act
+            ////Act
             var lastCheques = (IList<Cheque>)chequeService.GetLastCheques(count);
 
-            //Assert
+            ////Assert
             Assert.That(lastCheques, Is.Empty);
         }
 
+        /// <summary>
+        /// PassCheque GetsCheque ChequeSavedInRepo.
+        /// </summary>
         [Test]
         public void PassCheque_GetsCheque_ChequeSavedInRepo()
         {
-            //Arrange
+            ////Arrange
             var mockRepository = new Mock<IDBRepository>();
             var chequeService = new ChequeService(mockRepository.Object);
 
-            //Act
+            ////Act
             chequeService.PassCheque(new Cheque());
 
-            //Assert
+            ////Assert
             mockRepository.Verify(mock => mock.SaveCheque(It.IsAny<Cheque>()), Times.Once);
         }
 
+        /// <summary>
+        /// Method PassCheque GetsNull ChequeNotSaved.
+        /// </summary>
         [Test]
         public void PassCheque_GetsNull_ChequeNotSaved()
         {
-            //Arrange
+            ////Arrange
             var mockRepository = new Mock<IDBRepository>();
             var chequeService = new ChequeService(mockRepository.Object);
 
-            //Act
+            ////Act
             chequeService.PassCheque(null);
 
-            //Assert
+            ////Assert
             mockRepository.Verify(mock => mock.SaveCheque(It.IsAny<Cheque>()), Times.Never);
         }
-
     }
 }

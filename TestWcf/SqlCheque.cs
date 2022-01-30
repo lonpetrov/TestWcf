@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ChequeSql.cs" company="Manzana">
+// <copyright file="SqlCheque.cs" company="Manzana">
 //     Company copyright tag.
 // </copyright>
 //-----------------------------------------------------------------------

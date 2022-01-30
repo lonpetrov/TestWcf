@@ -35,6 +35,10 @@ namespace TestWcf
             ////repository = new DBRepository(connectionString);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChequeService"/> class.
+        /// </summary>
+        /// <param name="repo">Repository object</param>
         public ChequeService(IDBRepository repo)
         {
             // TODO: реализовать внедрение с помощью DI контейнера

@@ -1,28 +1,33 @@
-﻿
+﻿//-----------------------------------------------------------------------
+// <copyright file="FakeRepositoryTests.cs" company="Manzana">
+//     CheckService
+// </copyright>
+// <summary>This is Test class</summary>
+//-----------------------------------------------------------------------
 namespace TestWcfTests
 {
     using System;
-    using NUnit.Framework;
-    using Moq;
-    using TestWcf;
     using System.Collections.Generic;
-    using Moq.Dapper;
+    using System.IO;
     using System.Linq;
-    using System.Data;
-    using Dapper;
-    using TestWcf.Exceptions;
-    using System.Web.Hosting;
     using System.Xml.Linq;
     using System.Xml.Serialization;
-    using System.IO;
+    using NUnit.Framework;
+    using TestWcf;
 
+    /// <summary>
+    /// FakeRepository Tests.
+    /// </summary>
     [TestFixture]
-    class FakeRepositoryTests
+    public class FakeRepositoryTests
     {
+        /// <summary>
+        /// LastCheques GetsCountofCheques ReturnLastCheques.
+        /// </summary>
         [Test]
         public void GetLastCheques_GetsCountofCheques_ReturnLastCheques()
         {
-            //Arrange
+            ////Arrange
             var cheque = new Cheque()
             {
                 Id = new Guid(),
@@ -32,10 +37,15 @@ namespace TestWcfTests
                 Articles = new[] { "article1", "article2", "article3" }
             };
 
-            var dirOfXml = Path.Combine(Directory
-                    .GetParent(AppDomain.CurrentDomain.BaseDirectory)
+            var dirOfXml = Path.Combine(
+                Directory
+                    .GetParent(
+                    AppDomain.CurrentDomain.BaseDirectory)
                     .Parent.Parent.Parent.Parent
-                    .FullName, "TestWcf", "App_Data", "data.xml");
+                    .FullName,
+                    "TestWcf", 
+                    "App_Data",
+                    "data.xml");
 
             var formatter = new XmlSerializer(typeof(List<Cheque>));
 
@@ -54,40 +64,50 @@ namespace TestWcfTests
             {
                 formatter.Serialize(fs, cheques);
             }
-            //Arrange
+            ////Arrange
             var repo = new FakeDBRepository();
 
-            //Act
+            ////Act
             var actualCheques = repo.GetLastCheques(3);
 
-            //Assert
+            ////Assert
             Assert.That(actualCheques, Has.Count.EqualTo(3));
         }
 
+        /// <summary>
+        /// GetLastCheques GetsZeroOrLessCount ReturnEmptyList.
+        /// </summary>
+        /// <param name="count">Count case.</param>
         [Test]
         [TestCase(0)]
         [TestCase(-1)]
         public void GetLastCheques_GetsZeroOrLessCount_ReturnEmptyList(int count)
         {
-            
-            //Arrange
+            ////Arrange
             var repo = new FakeDBRepository();
 
-            //Act
+            ////Act
             var actualCheques = repo.GetLastCheques(count);
 
-            //Assert
+            ////Assert
             Assert.That(actualCheques, Is.Empty);
         }
 
+        /// <summary>
+        /// SaveCheque GetsChequeObject ChequeAddedToDB.
+        /// </summary>
         [Test]
         public void SaveCheque_GetsChequeObject_ChequeAddedToDB()
         {
-            //Arrange
-            var xmlFile = Path.Combine(Directory
+            ////Arrange
+            var xmlFile = Path.Combine(
+                Directory
                     .GetParent(AppDomain.CurrentDomain.BaseDirectory)
                     .Parent.Parent.Parent.Parent
-                    .FullName, "TestWcf", "App_Data", "data.xml");
+                    .FullName,
+                    "TestWcf",
+                    "App_Data",
+                    "data.xml");
 
             var cheque = new Cheque()
             {
@@ -99,10 +119,10 @@ namespace TestWcfTests
             };
             var repo = new FakeDBRepository();
 
-            //Act
+            ////Act
             repo.SaveCheque(cheque);
 
-            //Assert
+            ////Assert
             var doc = XDocument.Load(xmlFile);
             var cheques = doc.Descendants("Cheque")
                 .Select(node => new Cheque()
@@ -116,11 +136,11 @@ namespace TestWcfTests
 
             var retrivedCheque = cheques.Skip(Math.Max(0, cheques.Count() - 1)).ToList();
 
-            //Assert
+            ////Assert
             Assert.That(retrivedCheque, Has.Count.EqualTo(1));
-            Assert.That(retrivedCheque[0].Id, 
+            Assert.That(
+                retrivedCheque[0].Id, 
                 Is.EqualTo(new Guid("10000000-0000-0000-0000-000000000000")));
-
         }
     }
 }

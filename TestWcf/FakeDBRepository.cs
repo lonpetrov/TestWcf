@@ -26,6 +26,9 @@ namespace TestWcf
         /// </summary>
         private string dataXmlFileName = null;
 
+        /// <summary>
+        /// Base Directory
+        /// </summary>
         private string baseDir = null;
 
         /// <summary>
@@ -39,11 +42,13 @@ namespace TestWcf
             }
             else
             {
-                this.baseDir = Path.Combine(Directory
-                    .GetParent(AppDomain.CurrentDomain.BaseDirectory)
+                this.baseDir = Path.Combine(
+                                Directory.GetParent(
+                                AppDomain.CurrentDomain.BaseDirectory)
                     .Parent.Parent
                     .Parent.Parent
-                    .FullName, "TestWcf");
+                    .FullName, 
+                    "TestWcf");
             }
 
             this.dataXmlFileName = Path.Combine(
