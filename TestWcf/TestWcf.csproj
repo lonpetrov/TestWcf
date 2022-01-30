@@ -115,6 +115,7 @@
       <DependentUpon>ChequeService.svc</DependentUpon>
     </Compile>
     <Compile Include="DBRepository.cs" />
+    <Compile Include="Exceptions\InvalidChequeException.cs" />
     <Compile Include="Exceptions\InvalidCountException.cs" />
     <Compile Include="ExecuteWrapper.cs" />
     <Compile Include="FakeDBRepository.cs" />

@@ -8,7 +8,7 @@ using System.Data;
 
 namespace TestWcf
 {
-    interface IExecuteWrapper
+    public interface IExecuteWrapper
     {
         int Execute(IDbConnection cnn, string sql, object param);
     }

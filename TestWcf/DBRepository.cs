@@ -32,6 +32,8 @@ namespace TestWcf
 
         private Func<string, IDbConnection> connectionFactory;
 
+        private IExecuteWrapper executeWrapper;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DBRepository"/> class.
         /// </summary>
@@ -41,10 +43,19 @@ namespace TestWcf
             this.connectionString = conn;
         }
 
-        public DBRepository(string conn, Func<string, IDbConnection> dbConnFac)
+        public DBRepository(string conn, Func<string, IDbConnection> dbConnFac, IExecuteWrapper exWrap=null)
         {
             this.connectionFactory = dbConnFac;
             this.connectionString = conn;
+            if (exWrap == null)
+            {
+                this.executeWrapper = new ExecuteWrapper();
+            }
+            else
+            {
+                this.executeWrapper = exWrap;
+            }
+            
         }
 
         /// <summary>
@@ -74,7 +85,11 @@ namespace TestWcf
                         return cheques.Skip(Math.Max(0, cheques.Count() - count)).ToList();
                     }
                 }
-                throw new InvalidCountException(count);
+                else
+                {
+                    throw new InvalidCountException(count);
+                }
+                
             }
             catch (InvalidCountException ex)
             {
@@ -96,27 +111,44 @@ namespace TestWcf
         {
             try 
             {
-                var joinedArticles = string.Join(";", cheque.Articles);
-
-                using (IDbConnection db = connectionFactory.Invoke(connectionString))
+                if (cheque != null)
                 {
-                    var query = "INSERT INTO Cheques (Id, Number, Summ, Discount, Articles) VALUES(@Id, @Number, @Summ, @Discount, @Articles)";
+                    var joinedArticles = string.Join(";", cheque.Articles);
 
-                    var dp = new DynamicParameters();
+                    using (IDbConnection db = connectionFactory.Invoke(connectionString))
+                    {
+                        var query = "INSERT INTO Cheques (Id, Number, Summ, Discount, Articles) VALUES(@Id, @Number, @Summ, @Discount, @Articles)";
 
-                    dp.Add("@Id", cheque.Id);
-                    dp.Add("@Number", cheque.Number);
-                    dp.Add("@Summ", cheque.Id);
-                    dp.Add("@Discount", cheque.Number);
-                    dp.Add("@Articles", joinedArticles);
+                        var dp = new DynamicParameters();
 
-                    db.Execute(query, dp);
+                        dp.Add("@Id", cheque.Id);
+                        dp.Add("@Number", cheque.Number);
+                        dp.Add("@Summ", cheque.Id);
+                        dp.Add("@Discount", cheque.Number);
+                        dp.Add("@Articles", joinedArticles);
+
+                        //db.Execute(query, dp);
+                        executeWrapper.Execute(db, query, dp);
+                    }
                 }
+                else
+                {
+                    throw new InvalidChequeException();
+                }   
             }
-            catch (Exception ex)
+            catch (InvalidChequeException ex)
             {
                 Log.Error("Не удалось сохранить чек" + Environment.NewLine + ex.Message);
-            }     
+            }
+            //Чтобы не выбрасывалось исключение следует раскоментировать данный код
+            //catch (ArgumentNullException ex)
+            //{
+            //    Log.Error("Не удалось сохранить чек потому что значения одного или нескольких свойств равно NULL" + Environment.NewLine + ex.Message);
+            //}
+            catch
+            {
+                throw;
+            }
         }
     }
 }

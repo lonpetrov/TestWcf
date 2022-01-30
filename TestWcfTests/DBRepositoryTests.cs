@@ -155,7 +155,6 @@ namespace TestWcfTests
 
             //Assert
             Assert.That(actualCheques, Is.Empty);
-
         }
 
         [Test]
@@ -231,7 +230,7 @@ namespace TestWcfTests
         }
 
         [Test]
-        public void SaveCheque_GetsFullChequeObject_ChequeAddedToDB()
+        public void SaveCheque_GetsChequeObject_ChequeAddedToDB()
         {
             //Arrange
             var cheque = new Cheque()
@@ -243,29 +242,120 @@ namespace TestWcfTests
                 Articles = new []{"article1", "article2", "article3" }
             };
 
-
             var connectionString = "connection string";
+            var mockExecuteObject = Mock.Of<IExecuteWrapper>(
+                m => m.Execute(It.IsAny<IDbConnection>(),
+                    It.IsAny<string>(), 
+                    It.IsAny<DynamicParameters>()) == 1);
+
+            var mockExecute = Mock.Get(mockExecuteObject);
+
             var mockConnection = new Mock<IDbConnection>();
-            mockConnection.SetupDapper(m => m
-                .Execute(It.IsAny<string>(), It.IsAny<DynamicParameters>(), null, null, null))
-                .Returns(1)
-                .Verifiable();
-            //mockConnection.When(mockConnection.Object.Execute())
 
             var repo = new DBRepository(
-                connectionString, (conStr) =>
+                connectionString, 
+                (conStr) =>
                 {
                     mockConnection.Object.ConnectionString = conStr;
                     return mockConnection.Object;
-                });
+                },
+                mockExecuteObject);
 
             //Act
-            repo.SaveCheque(null);
+            repo.SaveCheque(cheque);
 
             //Assert
-            
+            mockExecute.Verify(m => m.Execute(
+                It.IsAny<IDbConnection>(),
+                It.IsAny<string>(), 
+                It.IsAny<DynamicParameters>()),
+                Times.Once);
 
-            
+        }
+
+        [Test]
+        public void SaveCheque_GetsNullObject_ChequeNotAddedToDB()
+        {
+            //Arrange
+            Cheque cheque = null;
+
+            var connectionString = "connection string";
+            var mockExecuteObject = Mock.Of<IExecuteWrapper>(
+                m => m.Execute(It.IsAny<IDbConnection>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DynamicParameters>()) == 1);
+
+            var mockExecute = Mock.Get(mockExecuteObject);
+
+            var mockConnection = new Mock<IDbConnection>();
+
+            var repo = new DBRepository(
+                connectionString,
+                (conStr) =>
+                {
+                    mockConnection.Object.ConnectionString = conStr;
+                    return mockConnection.Object;
+                },
+                mockExecuteObject);
+
+            //Act
+            repo.SaveCheque(cheque);
+
+            //Assert
+            mockExecute.Verify(m => m.Execute(
+                It.IsAny<IDbConnection>(),
+                It.IsAny<string>(),
+                It.IsAny<DynamicParameters>()),
+                Times.Never);
+
+        }
+
+        [Test]
+        public void SaveCheque_GetsChequeWithNulls_ChequeNotAddedToDB()
+        {
+            //Arrange
+            var cheque = new Cheque()
+            {
+                Id = null,
+                Number = null,
+                Discount = null,
+                Summ = null,
+                Articles = null
+            };
+
+            var connectionString = "connection string";
+            var mockExecuteObject = Mock.Of<IExecuteWrapper>(
+                m => m.Execute(It.IsAny<IDbConnection>(),
+                    It.IsAny<string>(),
+                    It.IsAny<DynamicParameters>()) == 1);
+
+            var mockExecute = Mock.Get(mockExecuteObject);
+
+            var mockConnection = new Mock<IDbConnection>();
+
+            var repo = new DBRepository(
+                connectionString,
+                (conStr) =>
+                {
+                    mockConnection.Object.ConnectionString = conStr;
+                    return mockConnection.Object;
+                },
+                mockExecuteObject);
+            TestDelegate whenValuesAreNulls;
+
+            //Act
+            whenValuesAreNulls = () => repo.SaveCheque(cheque);
+
+            //Assert
+            mockExecute.Verify(m => m.Execute(
+                It.IsAny<IDbConnection>(),
+                It.IsAny<string>(),
+                It.IsAny<DynamicParameters>()),
+                Times.Never);
+            Assert.Throws<ArgumentNullException>(whenValuesAreNulls);
+            //Assert.DoesNotThrow(whenValuesAreNulls);
+            //Чтобы исправить следует добавить блок catch в 
+            //DBRepository
         }
     }
 }
