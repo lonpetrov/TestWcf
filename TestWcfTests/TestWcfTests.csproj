@@ -19,6 +19,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Dapper">
+      <HintPath>..\packages\Dapper.2.0.123\lib\net461\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.16.1\lib\net45\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq.Dapper">
+      <HintPath>..\packages\Moq.Dapper.1.0.3\lib\netstandard2.0\Moq.Dapper.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
