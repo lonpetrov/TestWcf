@@ -28,6 +28,24 @@
     <Reference Include="Moq.Dapper">
       <HintPath>..\packages\Moq.Dapper.1.0.3\lib\netstandard2.0\Moq.Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.engine">
+      <HintPath>..\packages\NUnit3TestAdapter.4.2.1\build\net35\nunit.engine.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.engine.api">
+      <HintPath>..\packages\NUnit3TestAdapter.4.2.1\build\net35\nunit.engine.api.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.engine.core">
+      <HintPath>..\packages\NUnit3TestAdapter.4.2.1\build\net35\nunit.engine.core.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.3.13.3\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="NUnit3.TestAdapter">
+      <HintPath>..\packages\NUnit3TestAdapter.4.2.1\build\net35\NUnit3.TestAdapter.dll</HintPath>
+    </Reference>
+    <Reference Include="testcentric.engine.metadata">
+      <HintPath>..\packages\NUnit3TestAdapter.4.2.1\build\net35\testcentric.engine.metadata.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
