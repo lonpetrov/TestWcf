@@ -13,6 +13,7 @@ namespace TestWcfTests
     /// <summary>
     /// Cheque Test.
     /// </summary>
+    [Category("Cheque")]
     [TestFixture]
     public class ChequeTests
     {
